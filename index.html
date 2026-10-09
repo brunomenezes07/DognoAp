@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dog dos AP</title>
+<link href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--noite:#14213d;--noite2:#1d2e57;--mostarda:#f2b705;--ketchup:#d62c1f;--pao:#f6e3c0;--card:#fffaf0;--tx:#2a1a0a;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+html{scroll-padding-top:calc(120px + env(safe-area-inset-top,0px));scroll-behavior:smooth}
+body{margin:0;background:var(--noite);color:#fff;font-family:'DM Sans',system-ui,sans-serif}
+h1,h2,h3,.logo{font-family:'Bowlby One','Arial Black',sans-serif;font-weight:400}
+.top{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:12px 18px}
+.logo{color:var(--mostarda);font-size:1.4rem}
+.top a{background:var(--ketchup);color:#fff;text-decoration:none;font-weight:700;padding:9px 16px;border-radius:99px}
+.scroll{height:380vh;position:relative}
+.stage{position:sticky;top:0;height:100vh;overflow:hidden;background:linear-gradient(var(--noite),var(--noite2))}
+.stars{position:absolute;inset:0;background-image:radial-gradient(2px 2px at 20% 15%,#fff8,transparent),radial-gradient(2px 2px at 60% 8%,#fff8,transparent),radial-gradient(1.5px 1.5px at 85% 25%,#fff8,transparent),radial-gradient(1.5px 1.5px at 35% 30%,#fff8,transparent)}
+.headline{position:absolute;left:6%;top:16%;max-width:46%}
+.headline h1{font-size:clamp(2.2rem,7vw,5rem);line-height:1;margin:0 0 12px;color:var(--mostarda)}
+.headline p{margin:0;font-size:clamp(1rem,2vw,1.3rem);opacity:.9}
+.predio{position:absolute;right:6%;bottom:14%;width:min(38vw,300px);aspect-ratio:3/5;background:#3b2f4a;border-radius:10px 10px 0 0;padding:10px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;transform-origin:bottom right}
+.janela{background:#222a45;border-radius:4px;position:relative}
+.janela.on{background:var(--mostarda);box-shadow:0 0 18px 4px #f2b70599}
+.janela.alvo.on::after{content:"AP";position:absolute;inset:0;display:grid;place-items:center;font:700 .9rem 'DM Sans';color:var(--noite)}
+.rua{position:absolute;left:0;right:0;bottom:0;height:14%;background:#0c1428;border-top:4px dashed #ffffff33}
+.dog{position:absolute;left:0;top:0;font-size:3rem;line-height:1;will-change:transform;filter:drop-shadow(0 6px 6px #0006);z-index:5}
+.dist{position:absolute;left:6%;bottom:19%;font-weight:700;background:#0008;padding:8px 14px;border-radius:99px}
+.chegou{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.6);opacity:0;background:var(--ketchup);padding:14px 22px;border-radius:14px;font-family:'Bowlby One',sans-serif;font-size:clamp(1.3rem,4vw,2rem);text-align:center;transition:.35s;pointer-events:none;z-index:6}
+.chegou.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+main{background:var(--pao);color:var(--tx);padding:0 0 170px}
+.info{background:var(--mostarda);padding:22px 18px;text-align:center}
+.info h2{margin:0 0 8px;font-size:1.7rem;color:var(--noite)}
+.info p{margin:4px 0;font-weight:600}
+.status{display:inline-block;padding:5px 14px;border-radius:99px;font-weight:700;color:#fff;background:#777;margin-bottom:8px}
+.status.aberto{background:#1b8a3a}.status.fechado{background:var(--ketchup)}
+.barra{position:sticky;top:env(safe-area-inset-top,0px);z-index:15;background:var(--pao);padding:62px 12px 10px;border-bottom:2px solid #0001}
+.barra input{width:100%;max-width:760px;display:block;margin:0 auto 8px;padding:11px 14px;border-radius:12px;border:2px solid #0002;font:inherit;background:#fff}
+.chips{display:flex;gap:8px;overflow-x:auto;max-width:760px;margin:0 auto;padding-bottom:2px}
+.chips a{flex:none;background:var(--noite);color:#fff;text-decoration:none;font-weight:700;font-size:.9rem;padding:8px 14px;border-radius:99px}
+.cat{max-width:760px;margin:0 auto;padding:26px 14px 0}
+.cat h3{font-size:1.6rem;margin:0;color:var(--ketchup)}
+.cat .sub{margin:2px 0 14px;font-weight:600;opacity:.8}
+.item{background:var(--card);border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;border:2px solid #0000001a;margin-bottom:10px}
+.item .inf{flex:1}
+.item b{display:block}
+.item span{display:block;font-size:.88rem;opacity:.75;margin:2px 0 4px}
+.preco{font-weight:700;color:var(--ketchup)}
+.qtd{display:flex;align-items:center;gap:8px}
+.qtd button{width:38px;height:38px;border-radius:50%;border:0;background:var(--mostarda);font-size:1.3rem;font-weight:700;cursor:pointer}
+.qtd output{min-width:18px;text-align:center;font-weight:700}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--noite);outline-offset:2px}
+.vazio{text-align:center;padding:30px;display:none}
+.carrinho{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--noite);color:#fff;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));display:none;flex-direction:column;gap:8px;align-items:center;box-shadow:0 -6px 20px #0005}
+.carrinho.on{display:flex}
+.carrinho .linha{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:100%}
+.carrinho input{padding:10px 12px;border-radius:10px;border:0;font:inherit;flex:1;min-width:130px;max-width:220px}
+.enviar{background:var(--ketchup);color:#fff;border:0;padding:12px 20px;border-radius:99px;font:700 1rem 'DM Sans';cursor:pointer}
+.enviar:disabled{opacity:.5;cursor:not-allowed}
+.aviso{font-size:.85rem;color:var(--mostarda);text-align:center}
+@media (max-width:640px){.headline{max-width:55%}.predio{width:40vw}.dog{font-size:2.4rem}}
+@media (prefers-reduced-motion:reduce){.chegou{transition:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="top"><span class="logo">Dog dos AP</span><a href="#cardapio">Fazer pedido</a></div>
+
+<section class="scroll" id="scroll"><div class="stage" id="stage">
+  <div class="stars"></div>
+  <div class="headline" id="headline"><h1>Dog dos AP</h1><p>O cachorro-quente que chega até o seu apartamento. Role a tela e veja ele a caminho.</p></div>
+  <div class="predio" id="predio"></div><div class="rua"></div>
+  <div class="dist" id="dist">Faltam 800 m</div><div class="dog" id="dog">🌭</div>
+  <div class="chegou" id="chegou">Chegou no seu AP!<br><small style="font-family:'DM Sans';font-weight:600">Bora pedir?</small></div>
+</div></section>
+
+<main id="cardapio">
+  <div class="info">
+    <span class="status" id="status">Verificando...</span>
+    <h2>Dog dos AP</h2>
+    <p>Espera: 20 a 40 min · Entrega: R$ 5,00 · Pedido mínimo: R$ 15,00</p>
+    <p>Ter a Qui: 18h às 22:50 · Sex e Sáb: 18h às 23:50</p>
+    <p>Telefone: 11 95675-7740</p>
+  </div>
+  <div class="barra">
+    <input id="busca" type="search" placeholder="Pesquise por produto ou ingrediente" aria-label="Buscar no cardápio">
+    <nav class="chips" id="chips"></nav>
+  </div>
+  <div id="menu"></div>
+  <p class="vazio" id="vazio">Nada encontrado. Tente outra palavra.</p>
+</main>
+
+<div class="carrinho" id="carrinho">
+  <div class="aviso" id="aviso"></div>
+  <div class="linha"><strong id="total"></strong></div>
+  <div class="linha"><input id="nome" placeholder="Seu nome" aria-label="Seu nome"><input id="ap" placeholder="Bloco / AP" aria-label="Bloco e apartamento"></div>
+  <button class="enviar" id="enviar">Enviar pedido pelo WhatsApp</button>
+</div>
+
+<script>
+const WHATS="5511956757740",TAXA=5,MIN=15;
+// [categoria, subtítulo, emoji, [[nome, descrição, preço]...]]
+const CAT=[
+["Combos","Escolha o combo perfeito para sua fome","🔥",[
+["COMBO LEGITIMO","Hot Dog Legitimo + Refrigerante + Batata",31.9],
+["COMBO KIDS","Hot Dog Simples + Acompanhamento + Bebida !!",25.9]]],
+["Hot Dogs","Cachorros quentes tradicionais","🌭",[
+["SIMPLES","Pão Hot Dog, Maionese, Ketchup, Mostarda, Salsicha Sadia, Purê Caseiro e Palha.",10.9],
+["TRADICIONAL","Pão Hot Dog, Maionese, Ketchup, Mostarda, Salsicha Sadia, Milho, Cenoura, Tomate, Purê e Palha.",13.9],
+["LEGÍTIMO","Pão Hot Dog, Maionese, Ketchup, Mostarda, Salsicha Sadia, Milho, Purê, Catupiry Original e Palha.",17.9],
+["CLÁSSICO","Pão Hot Dog, Maionese, Ketchup, Mostarda, Salsicha Sadia, Milho, Cheddar, Purê e Batata Palha",17.9],
+["GORDINHO","Pão Hot Dog, Maionese, Ketchup, Mostarda, Salsicha Sadia, Milho, Purê, Bacon e Batata Palha.",17.9],
+["TOPZERA","Pão Hot Dog, Maionese, Ketchup, Mostarda, Salsicha Sadia, Milho, Purê, Bacon, Cheddar, Catupiry Original e Palha.",19.9],
+["INCOMPARÁVEL - NO PRATO","Pão Hot Dog, Maionese, Ketchup, Mostarda, 2 Salsichas Sadia, Milho, Cenoura, Tomate, Carne Moída ao Molho, Purê, Cheddar, Catupiry, Queijo Ralado e Palha.",27.9],
+["PIZZA DOG","Pão Hot Dog, Maionese, Ketchup, Mostarda, Salsicha Sadia, Purê Caseiro, Queijo Mussarela, Tomate, Azeitona e Orégano.",17.9],
+["SACHES + GUARDANAPOS","2 Saches Heinz de cada (Ketchup, Mostarda e Maionese) + Guardanapos",3]]],
+["Especiais","Cachorros quentes na baguete, carne louca e pernil","🥖",[
+["SUPREMO","Baguete com Parmesão, Maionese, Ketchup, Mostarda, 2 Salsichas Sadia, Purê, Frango Desfiado, Milho, Catupiry Original e Palha.",23.9],
+["MAGNÍFICO","Baguete com Parmesão, Maionese, Ketchup, Mostarda, 2 Salsichas Sadia, Purê, Calabresa Fatiada e Frita, Tomate, Orégano e Palha.",23.9],
+["PREDILETO","Baguete com Parmesão, Maionese, Ketchup, Mostarda, 2 Salsichas Sadia, Purê, Presunto, Queijo Mussarela, Tomate, Orégano e Palha.",23.9],
+["FANTÁSTICO","Baguete com Parmesão, Maionese, Ketchup, Mostarda, 2 Salsichas Sadia, Milho, Purê, Queijo Mussarela, Bacon e Palha.",23.9],
+["IRRESISTÍVEL - CARNE LOUCA","Baguete com Parmesão, Maionese, Ketchup, Mostarda, Carne Desfiada ao Molho (Miolo de Acém), Purê e Palha.",27.9],
+["DIVINO - PERNIL","Baguete Francês, Pernil Desfiado e Temperado com Cebola e Pimentão Vermelho, Vinagrete (Cebola, Tomate e Salsinha).",22.9],
+["SURREAL","Baguete Francês, Maionese dos AP, Purê, Calabresa, Vinagrete, Queijo Mussarela e Palha",22.9],
+["SANTO DOG","Baguete Parmesão, Ketchup, Mostarda, Maionese, Milho, Tomate, Cenoura, Cheddar, Catupiry, Mussarela, Purê e Palha. (Nenhum tipo de carnes ou embutidos)",23.9]]],
+["Doces","Experimente esta novidade!","🍫",[
+["SENSAÇÃO","Pão Hot Dog, Leite Condensado, Chocolate ao Leite e Morangos Selecionados.",16.9],
+["PRESTÍGIO","Pão Hot Dog, Leite Condensado, Chocolate ao Leite e Coco Ralado.",14.9],
+["DOCE DE LEITE","Pão Hot Dog, Leite Condensado, Doce de Leite e Coco Ralado.",14.9],
+["BANOFFEE","Pão Hot Dog, Doce de Leite, Banana Nanica, Leite Condensado e Canela em Pó.",16.9],
+["CHOCOWAFER","Pão, Leite Condensado, Chocolate Branco e Bis Branco",16.9],
+["TENTAÇÃO","Pão de Hot Dog, Chocolate Ninho, Morangos Frescos e Calda de Morango.",16.9]]],
+["Porções","Ótima opção pra quem só quer um tira-gosto ou seu lanche mais completo!","🍟",[
+["FRITAS P","Batatas Fritas McCain Surecrisp sequinhas e crocantes.",9],
+["FRITAS G","Batatas Fritas McCain Surecrisp sequinhas e crocantes.",18],
+["FRITAS DIVINA","Fritas McCain Surecrisp crocantes e sequinhas, pernil temperado, desfiado e coberto com molho barbecue.",28],
+["FRITAS ESPECIAL","Fritas McCain Surecrisp crocantes e sequinhas, cobertas com cheddar e bacon.",28],
+["FRITAS LEGÍTIMA","Fritas McCain Surecrisp crocantes e sequinhas, cobertas com Catupiry legítimo e bacon.",28],
+["NUGGETS 5 UN.","Nuggets Supreme crocantes e sequinhos, acompanhados da Maionese dos AP.",10],
+["NUGGETS 10 UN.","Nuggets Supreme crocantes e sequinhos, acompanhados da Maionese dos AP.",19],
+["ONION RINGS","Anéis de cebola empanados, crocantes e sequinhos! Porção com 10 unidades e acompanha Maionese dos AP.",16.9]]],
+["Bebidas","Refrigerantes e sucos gelados","🥤",[
+["COCA COLA LATA","Coca-Cola (350ml)",6.5],
+["COCA COLA LATA SEM AÇÚCAR","Coca-Cola Zero Açúcar (350ml)",7],
+["GUARANÁ ANTARCTICA LATA","Guaraná Antarctica (350ml)",6.5],
+["FANTA LARANJA LATA","Fanta Laranja (350ml)",6.5],
+["FANTA UVA LATA","Fanta Uva (350ml)",6.5],
+["SUCO DEL VALLE MARACUJÁ","Suco de Maracujá (290ml)",7],
+["SUCO DEL VALLE UVA","Suco de Uva (290ml)",7],
+["ÁGUA MINERAL","Água sem gás (510ml)",4],
+["ÁGUA MINERAL COM GÁS","Água gaseificada (510ml)",5],
+["ITUBAÍNA 500 ML","Itubaína 500ml",8],
+["COCA COLA 600 ML","Coca-Cola (600ml)",9],
+["COCA COLA 2 LITROS","Coca-Cola (2 litros)",16],
+["GUARANÁ ANTARCTICA PET","Guaraná Antarctica (1,5 litro)",13],
+["SUKITA LIMÃO PET","Sukita Limão (2 litros)",13],
+["SUKITA UVA PET","Sukita Uva (2 litros)",13],
+["SUKITA LARANJA PET","Sukita Laranja (2 litros)",13]]],
+["Cervejas","Cervejas trincando!!","🍺",[
+["SKOL LATA","Skol (350ml)",6.5],
+["BUDWEISER LONG NECK","Budweiser (330ml)",10],
+["HEINEKEN LONG NECK","Heineken (330ml)",12]]]
+];
+const R=v=>"R$ "+v.toFixed(2).replace(".",",");
+const sem=s=>s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+const q={},menu=document.getElementById("menu"),chips=document.getElementById("chips");
+const itens=[];
+CAT.forEach((c,ci)=>{
+ const sec=document.createElement("section");sec.className="cat";sec.id="cat"+ci;
+ sec.innerHTML=`<h3>${c[2]} ${c[0]}</h3><p class="sub">${c[1]}</p>`;
+ c[3].forEach((it,k)=>{
+  const id=ci+"-"+k,d=document.createElement("div");d.className="item";d.dataset.busca=sem(it[0]+" "+it[1]);
+  d.innerHTML=`<div class="inf"><b>${it[0]}</b><span>${it[1]}</span><div class="preco">${R(it[2])}</div></div><div class="qtd"><button aria-label="Tirar ${it[0]}">−</button><output>0</output><button aria-label="Adicionar ${it[0]}">+</button></div>`;
+  const [m,p]=d.querySelectorAll("button"),o=d.querySelector("output");
+  m.onclick=()=>{q[id]=Math.max(0,(q[id]||0)-1);o.textContent=q[id];atualiza()};
+  p.onclick=()=>{q[id]=(q[id]||0)+1;o.textContent=q[id];atualiza()};
+  itens.push({id,nome:it[0],preco:it[2]});sec.appendChild(d);
+ });
+ menu.appendChild(sec);
+ const a=document.createElement("a");a.href="#cat"+ci;a.textContent=c[0];chips.appendChild(a);
+});
+document.getElementById("busca").oninput=e=>{
+ const t=sem(e.target.value.trim());let achou=0;
+ document.querySelectorAll(".cat").forEach(s=>{let n=0;
+  s.querySelectorAll(".item").forEach(i=>{const ok=!t||i.dataset.busca.includes(t);i.style.display=ok?"":"none";if(ok)n++});
+  s.style.display=n?"":"none";achou+=n});
+ document.getElementById("vazio").style.display=achou?"none":"block";
+};
+function sub(){return itens.reduce((s,i)=>s+(q[i.id]||0)*i.preco,0)}
+function atualiza(){
+ const s=sub(),car=document.getElementById("carrinho");
+ car.classList.toggle("on",s>0);
+ document.getElementById("total").textContent=`Itens ${R(s)} + entrega ${R(TAXA)} = ${R(s+TAXA)}`;
+ const falta=MIN-s,bt=document.getElementById("enviar");
+ document.getElementById("aviso").textContent=falta>0?`Faltam ${R(falta)} para o pedido mínimo`:"";
+ bt.disabled=falta>0;
+}
+document.getElementById("enviar").onclick=()=>{
+ const ap=document.getElementById("ap"),nome=document.getElementById("nome");
+ if(!ap.value.trim()){ap.focus();return}
+ const l=itens.filter(i=>q[i.id]).map(i=>`${q[i.id]}x ${i.nome}`).join("%0A"),s=sub();
+ const msg=`Pedido Dog dos AP%0A${l}%0AItens: ${R(s)}%0AEntrega: ${R(TAXA)}%0ATotal: ${R(s+TAXA)}%0ANome: ${encodeURIComponent(nome.value.trim())}%0AEntregar em: ${encodeURIComponent(ap.value.trim())}`;
+ window.open(`https://wa.me/${WHATS}?text=${msg}`,"_blank");
+};
+// aberto ou fechado (horário de Brasília)
+(function(){
+ const f=new Intl.DateTimeFormat("en-US",{timeZone:"America/Sao_Paulo",weekday:"short",hour:"numeric",minute:"numeric",hour12:false}).formatToParts(new Date());
+ const g=t=>f.find(x=>x.type===t).value,dia=g("weekday"),min=(+g("hour")%24)*60+ +g("minute");
+ const fim={Tue:1370,Wed:1370,Thu:1370,Fri:1430,Sat:1430}[dia];
+ const aberto=fim&&min>=1080&&min<=fim,el=document.getElementById("status");
+ el.textContent=aberto?"Loja aberta":"Loja fechada";el.className="status "+(aberto?"aberto":"fechado");
+})();
+// prédio e cena de rolagem
+const predio=document.getElementById("predio");
+for(let i=0;i<15;i++){const j=document.createElement("div");j.className="janela"+(i===7?" alvo":"");if([1,4,10,13].includes(i))j.classList.add("on");predio.appendChild(j)}
+const alvo=predio.querySelector(".alvo"),sc=document.getElementById("scroll"),stage=document.getElementById("stage"),dog=document.getElementById("dog"),dist=document.getElementById("dist"),chegou=document.getElementById("chegou"),head=document.getElementById("headline");
+function frame(){
+ const r=sc.getBoundingClientRect(),p=Math.min(1,Math.max(0,-r.top/(sc.offsetHeight-innerHeight)));
+ const sr=stage.getBoundingClientRect(),ar=alvo.getBoundingClientRect();
+ const x0=sr.width*.04,y0=sr.height*.8,x1=ar.left-sr.left+ar.width/2-24,y1=ar.top-sr.top+ar.height/2-24,e=p*p*(3-2*p);
+ const x=x0+(x1-x0)*e,y=y0+(y1-y0)*e-Math.sin(e*Math.PI)*sr.height*.12;
+ dog.style.transform=`translate(${x}px,${y}px) scale(${.7+e*1.1}) rotate(${-10+e*10}deg)`;
+ dist.textContent=p>=.98?"Chegou!":"Faltam "+Math.round(800*(1-p))+" m";
+ predio.style.transform=`scale(${1+p*.08})`;
+ alvo.classList.toggle("on",p>=.95);chegou.classList.toggle("show",p>=.98);
+ head.style.opacity=p>.6?Math.max(0,1-(p-.6)*4):1;
+}
+addEventListener("scroll",()=>requestAnimationFrame(frame),{passive:true});addEventListener("resize",frame);frame();
+</script>
+</body>
+</html>
